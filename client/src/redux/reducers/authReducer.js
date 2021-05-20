@@ -1,7 +1,7 @@
-import { CLEAR_ERROR_FAILURE, CLEAR_ERROR_REQUEST, CLEAR_ERROR_SUCCESS, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS } from "../types"
+import { CLEAR_ERROR_FAILURE, CLEAR_ERROR_REQUEST, CLEAR_ERROR_SUCCESS, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT_REQUEST, LOGOUT_FAILURE, LOGOUT_SUCCESS} from "../types"
 
 const initialState = {
-    token: localStorage.getItem('toekn'),
+    token: localStorage.getItem('token'),
     isAuthenticated: null,
     isLoading: false,
     user: "",
@@ -14,6 +14,7 @@ const initialState = {
 
 const authReducer = (state = initialState, action) => {
     switch (action.type){
+        case LOGOUT_REQUEST:
         case LOGIN_REQUEST:
             return {
                 ...state,
@@ -34,6 +35,7 @@ const authReducer = (state = initialState, action) => {
             }
         
         case LOGIN_FAILURE:
+        case LOGOUT_FAILURE:
            localStorage.removeItem("token")
             return {
                 ...state,
@@ -46,6 +48,18 @@ const authReducer = (state = initialState, action) => {
                 userRole: null,
                 errorMsg: action.payload.data.msg
             }
+
+        case LOGOUT_SUCCESS:
+            localStorage.removeItem("token")
+            return {
+                token: null,
+                user: null,
+                userId: null,
+                isAuthenticated: false,
+                isLoading: false,
+                userRole: null,
+                errorMsg: ""
+            };
 
         case CLEAR_ERROR_REQUEST:
             return {
@@ -62,6 +76,7 @@ const authReducer = (state = initialState, action) => {
                 ...state,
                 errorMsg: null,
             }
+
         default:
             return state
     }

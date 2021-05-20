@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { call, put, takeEvery, all, fork } from 'redux-saga/effects'
-import { LOGIN_FAILURE, LOGIN_SUCCESS,LOGIN_REQUEST,  } from '../types'
+import { LOGIN_FAILURE, LOGIN_SUCCESS,LOGIN_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE, LOGOUT_REQUEST } from '../types'
 
 // Login
 
@@ -36,8 +36,34 @@ function* watchLoginUser() {
     yield takeEvery(LOGIN_REQUEST, loginUser)
 }
 
+
+// LOGOUT
+
+function* logout(action) {
+    try {
+        yield put({
+            type: LOGOUT_SUCCESS,
+
+        })
+    } catch(e) {
+        yield put({
+            type: LOGOUT_FAILURE,
+
+        })
+        console.log(e)
+    }
+}
+
+// 로그인시 3개의 패턴이 유기적으로 작동함.
+function* watchlogout() {
+    yield takeEvery(LOGOUT_REQUEST, logout)
+}
+
+
+
 export default function* authSaga() {
     yield all([
-        fork(watchLoginUser)
+        fork(watchLoginUser),
+        fork(watchlogout)
     ])
 }

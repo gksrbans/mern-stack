@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "babel-watch": "^7.4.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -28,7 +29,8 @@
     "nodemon": "^2.0.7"
   },
   "scripts": {
-    "dev": "nodemon ./server/server.js --exec babel-node --ignore './client'"
+    "dev": "nodemon ./server/server.js --exec babel-node --ignore './client'",
+    "dev-watch": "babel-watch server/server.js --ignore './client'"
   },
   "author": "",
   "license": "ISC"
