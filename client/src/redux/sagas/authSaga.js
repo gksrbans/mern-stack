@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { call, put, takeEvery, all, fork } from 'redux-saga/effects'
-import { LOGIN_FAILURE, LOGIN_SUCCESS,LOGIN_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE, LOGOUT_REQUEST } from '../types'
+import { LOGIN_FAILURE, LOGIN_SUCCESS,LOGIN_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE, LOGOUT_REQUEST, USER_LOADING_SUCCESS, USER_LOADING_FAILURE, USER_LOADING_REQUEST } from '../types'
 
 // Login
 
@@ -15,6 +15,7 @@ const loginUserAPI = (loginData) => {
 } 
 
 function* loginUser(action) {
+    console.log('loginuser들어옴?')
     try {
         const result = yield call(loginUserAPI, action.payload)
         console.log(result)
@@ -60,10 +61,52 @@ function* watchlogout() {
 }
 
 
+// User Loading
+
+const userLoadingAPI = (token) => {
+    console.log('Loading왜 안대')
+    console.log(token)
+    const config = {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }
+    if(token) {
+        config.headers["x-auth-token"] = token
+    }
+    return axios.get('api/auth/user', config)
+} 
+
+function* userLoading(action) {
+    console.log('userLoading 들어옴?')
+    try {
+        console.log('지닙하긴하냐')
+        console.log(action,"userLoading action")
+        const result = yield call(userLoadingAPI, action.payload)
+        yield put({
+            type: USER_LOADING_SUCCESS,
+            payload: result.data
+        })
+    } catch(e) {
+        yield put({
+            type: USER_LOADING_FAILURE,
+            payload: e.response
+        })
+    }
+}
+
+
+function* watchuserLoading() {
+    console.log('watchuserLoading 들어오나')
+    yield takeEvery(USER_LOADING_REQUEST, userLoading);
+}
+
+
 
 export default function* authSaga() {
     yield all([
         fork(watchLoginUser),
-        fork(watchlogout)
+        fork(watchlogout),
+        fork(watchuserLoading)
     ])
 }
