@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom'
 import LoginModal from '../component/auth/LoginModal'
 import RegisterModal from "../component/auth/RegisterModal";
 import { useSelector, useDispatch } from 'react-redux'
-import { LOGOUT_REQUEST } from '../redux/types'
+import { LOGOUT_REQUEST, POSTS_WRITE_REQUEST } from '../redux/types'
  
  
 const AppNavbar = () => {
@@ -29,8 +29,10 @@ const AppNavbar = () => {
     }
 
     const addPostClick = () => {
-        
-    }
+        dispatch({
+          type: POSTS_WRITE_REQUEST,
+        });
+    };
 
     const authLink = (
         <Fragment>
