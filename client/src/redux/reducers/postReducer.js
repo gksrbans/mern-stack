@@ -19,8 +19,9 @@ export default function(state = initialState, action) {
         case POSTS_LOADING_REQUEST:
             return {
                 ...state,
+                posts: [], // 카드를 눌렀을때 빈배열로 초기화.
                 loading: true,
-            }
+            } 
 
         case POSTS_LOADING_SUCCESS:
             return {
