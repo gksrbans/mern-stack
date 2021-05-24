@@ -14,4 +14,4 @@ export const GrowingSpinner = (
             <Spinner style={{width: "2rem", height: "2rem"}}color="dark" />
         </Row>
     </Fragment>
-)
+) 
