@@ -92,5 +92,5 @@ const RegisterModal = () => {
         </div>
     )
 }
-
+ 
 export default RegisterModal

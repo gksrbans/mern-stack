@@ -302,8 +302,6 @@ export const editorConfiguration = {
 
   language: "ko",
 
-
-  // CKEditor Framework custormize
   simpleUpload: {
     uploadUrl: `${process.env.REACT_APP_BASIC_SERVER_URL}/api/post/image`,
 
