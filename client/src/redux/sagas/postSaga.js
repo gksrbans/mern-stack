@@ -69,33 +69,32 @@ function* watchuploadPosts() {
 }
 
 // Post Detail
-
 const loadPostDetailAPI = (payload) => {
-    console.log(payload)
+    console.log(payload);
     return axios.get(`/api/post/${payload}`);
-}
-
-function* loadPostDetail(action) {
+  };
+  
+  function* loadPostDetail(action) {
     try {
-        const result = yield call(loadPostDetailAPI, action.payload)
-        console.log(result, "post_detail_saga_data")
-        yield put({
-            type: POST_DETAIL_LOADING_SUCCESS,
-            payload: result.data,
-        });
-        
-    } catch(e) {
-        yield put({
-            type: POST_DETAIL_LOADING_FAILURE,
-            payload: e,
-        });
-        yield put(push("/"));
+      console.log(action);
+      const result = yield call(loadPostDetailAPI, action.payload);
+      console.log(result, "post_detail_saga_data");
+      yield put({
+        type: POST_DETAIL_LOADING_SUCCESS,
+        payload: result.data,
+      });
+    } catch (e) {
+      yield put({
+        type: POST_DETAIL_LOADING_FAILURE,
+        payload: e,
+      });
+      yield put(push("/"));
     }
-}
-
-function* watchloadPostDetail() {
-    yield takeEvery(POST_DETAIL_LOADING_REQUEST, loadPostDetail)
-}
+  }
+  
+  function* watchloadPostDetail() {
+    yield takeEvery(POST_DETAIL_LOADING_REQUEST, loadPostDetail);
+  }
 
 export default function* postSaga() {
     yield all([fork(watchloadPosts),fork(watchuploadPosts), fork(watchloadPostDetail)]);

@@ -117,18 +117,19 @@ function* watchlogout() {
 // User Loading
 
 const userLoadingAPI = (token) => {
-    console.log('Loading왜 안대')
-    console.log(token)
+    console.log(token);
+  
     const config = {
-        headers: {
-            "Content-Type": "application/json"
-        }
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    if (token) {
+      config.headers["x-auth-token"] = token;
     }
-    if(token) {
-        config.headers["x-auth-token"] = token
-    }
-    return axios.get('api/auth/user', config)
-} 
+    console.log('이거임 ??')
+    return axios.get("api/auth/user", config);
+  };
 
 function* userLoading(action) {
     console.log('userLoading 들어옴?')
@@ -160,8 +161,8 @@ export default function* authSaga() {
     yield all([
         fork(watchLoginUser),
         fork(watchlogout),
-        fork(watchuserLoading),
         fork(watchregisterUser),
         fork(watchclearError),
+        fork(watchuserLoading),
     ])
 }
