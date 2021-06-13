@@ -22,7 +22,7 @@ function* loadPosts() {
             type: POSTS_LOADING_FAILURE,
             payload: e,
         })
-        yield push("/")
+        yield put(push("/"));
     }
 }
 

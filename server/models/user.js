@@ -29,18 +29,18 @@ const UserSchema = new mongoose.Schema({
     {
       post_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "post",
+        ref: "posts",
       },
       comment_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "comment",
+        ref: "comments",
       },
     },
   ],
   posts: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "post",
+      ref: "posts",
     },
   ],
 });
