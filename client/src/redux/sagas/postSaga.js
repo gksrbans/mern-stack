@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { all, put, takeEvery, fork, call } from 'redux-saga/effects'
 import { push } from 'connected-react-router'
-import { POSTS_LOADING_FAILURE, POSTS_LOADING_REQUEST, POSTS_LOADING_SUCCESS, POST_DETAIL_LOADING_FAILURE, POST_DETAIL_LOADING_REQUEST, POST_DETAIL_LOADING_SUCCESS, POST_UPLOADING_FAILURE, POST_UPLOADING_REQUEST, POST_UPLOADING_SUCCESS } from '../types'
+import { POSTS_LOADING_FAILURE, POSTS_LOADING_REQUEST, POSTS_LOADING_SUCCESS, POST_DELETE_FAILURE, POST_DELETE_REQUEST, POST_DELETE_SUCCESS, POST_DETAIL_LOADING_FAILURE, POST_DETAIL_LOADING_REQUEST, POST_DETAIL_LOADING_SUCCESS, POST_UPLOADING_FAILURE, POST_UPLOADING_REQUEST, POST_UPLOADING_SUCCESS } from '../types'
 
 // All Posts load
 
@@ -91,11 +91,48 @@ const loadPostDetailAPI = (payload) => {
       yield put(push("/"));
     }
   }
-  
+
   function* watchloadPostDetail() {
     yield takeEvery(POST_DETAIL_LOADING_REQUEST, loadPostDetail);
   }
 
+  // Post Delete
+  const DeletePostAPI = (payload) => {
+    const config = {
+        headers: {
+            "Content_Type": "application/json"
+        }
+    }
+    const token = payload.token
+
+    if(token) {
+        config.headers["x-auth-token"] = token
+    }
+
+    return axios.delete(`/api/post/${payload.id}`, config)
+  };
+  
+  function* DeletePost(action) {
+    try {
+      const result = yield call(DeletePostAPI, action.payload);
+      
+      yield put({
+        type: POST_DELETE_SUCCESS,
+        payload: result.data,
+      });
+      yield put(push("/"))
+    } catch (e) {
+      yield put({
+        type: POST_DELETE_FAILURE,
+        payload: e,
+      });
+      
+    }
+  }
+  
+  function* watchDeletePost() {
+    yield takeEvery(POST_DELETE_REQUEST, DeletePost);
+  }
 export default function* postSaga() {
-    yield all([fork(watchloadPosts),fork(watchuploadPosts), fork(watchloadPostDetail)]);
+    yield all([fork(watchloadPosts),fork(watchuploadPosts), fork(watchloadPostDetail), fork(watchDeletePost)]);
 }  
