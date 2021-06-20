@@ -36,7 +36,7 @@ const PostDetail = (req) => {
       payload: localStorage.getItem("token"),
     });
     */
-  }, []);
+  }, [dispatch, req.match.params.id]);
 
   const onDeleteClick = () => {
     dispatch({

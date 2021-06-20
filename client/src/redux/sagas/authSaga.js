@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { call, put, takeEvery, all, fork } from 'redux-saga/effects'
-import { LOGIN_FAILURE, LOGIN_SUCCESS,LOGIN_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE, LOGOUT_REQUEST, USER_LOADING_SUCCESS, USER_LOADING_FAILURE, USER_LOADING_REQUEST, REGISTER_SUCCESS, REGISTER_FAILURE, REGISTER_REQUEST, CLEAR_ERROR_REQUEST, CLEAR_ERROR_FAILURE, CLEAR_ERROR_SUCCESS } from '../types'
+import { LOGIN_FAILURE, LOGIN_SUCCESS,LOGIN_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE, LOGOUT_REQUEST, USER_LOADING_SUCCESS, USER_LOADING_FAILURE, USER_LOADING_REQUEST, REGISTER_SUCCESS, REGISTER_FAILURE, REGISTER_REQUEST, CLEAR_ERROR_REQUEST, CLEAR_ERROR_FAILURE, CLEAR_ERROR_SUCCESS, PASSWORD_EDIT_UPLOADING_SUCCESS, PASSWORD_EDIT_UPLOADING_FAILURE, PASSWORD_EDIT_UPLOADING_REQUEST } from '../types'
 
 // Login
 
@@ -13,6 +13,7 @@ const loginUserAPI = (loginData) => {
     }
     return axios.post('api/auth', loginData, config)
 } 
+
 
 function* loginUser(action) {
     console.log('loginuser들어옴?')
@@ -155,7 +156,41 @@ function* watchuserLoading() {
     console.log('yield 컨트롤 함수 이후')
 }
 
+// Edit Password
 
+const EditPasswordAPI = (payload) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const token = payload.token;
+  
+    if (token) {
+      config.headers["x-auth-token"] = token;
+    }
+    return axios.post(`/api/user/${payload.userName}/profile`, payload, config);
+  };
+  
+  function* EditPassword(action) {
+    try {
+      console.log(action, "EditPassword");
+      const result = yield call(EditPasswordAPI, action.payload);
+      yield put({
+        type: PASSWORD_EDIT_UPLOADING_SUCCESS,
+        payload: result.data,
+      });
+    } catch (e) {
+      yield put({
+        type: PASSWORD_EDIT_UPLOADING_FAILURE,
+        payload: e.response,
+      });
+    }
+  }
+  
+  function* watchEditPassword() {
+    yield takeEvery(PASSWORD_EDIT_UPLOADING_REQUEST, EditPassword);
+  }
 
 export default function* authSaga() {
     yield all([
@@ -164,5 +199,6 @@ export default function* authSaga() {
         fork(watchregisterUser),
         fork(watchclearError),
         fork(watchuserLoading),
+        fork(watchEditPassword),
     ])
 }

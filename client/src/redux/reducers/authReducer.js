@@ -1,4 +1,4 @@
-import { CLEAR_ERROR_FAILURE, CLEAR_ERROR_REQUEST, CLEAR_ERROR_SUCCESS, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT_REQUEST, LOGOUT_FAILURE, LOGOUT_SUCCESS, USER_LOADING_FAILURE, USER_LOADING_SUCCESS, USER_LOADING_REQUEST, REGISTER_REQUEST, REGISTER_SUCCESS, REGISTER_FAILURE} from "../types"
+import { CLEAR_ERROR_FAILURE, CLEAR_ERROR_REQUEST, CLEAR_ERROR_SUCCESS, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT_REQUEST, LOGOUT_FAILURE, LOGOUT_SUCCESS, USER_LOADING_FAILURE, USER_LOADING_SUCCESS, USER_LOADING_REQUEST, REGISTER_REQUEST, REGISTER_SUCCESS, REGISTER_FAILURE, PASSWORD_EDIT_UPLOADING_REQUEST, PASSWORD_EDIT_UPLOADING_SUCCESS, PASSWORD_EDIT_UPLOADING_FAILURE} from "../types"
 
 const initialState = {
     token: localStorage.getItem('token'),
@@ -9,7 +9,8 @@ const initialState = {
     userName: "",
     userRole: "",
     errorMsg: "",
-    successMsg: ""
+    successMsg: "",
+    previousMatchMsg: "",
 }
 
 const authReducer = (state = initialState, action) => {
@@ -85,21 +86,45 @@ const authReducer = (state = initialState, action) => {
                 isLoading:false,
                 userRole:"",
             }
+        // Password Edit
+        case PASSWORD_EDIT_UPLOADING_REQUEST:
+            return {
+                ...state,
+                isLoading: true,
+            }
+        case PASSWORD_EDIT_UPLOADING_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                successMsg: action.payload.data.success_msg,
+                errorMsg: "",
+                previousMsg: "",
+            }
+        case PASSWORD_EDIT_UPLOADING_FAILURE:
+            return {
+                ...state,
+                isLoading: false,
+                successMsg: "",
+                errorMsg: action.payload.fail_msg,
+                previousMatchMsg: action.payload.match_msg,
+            }    
             
         case CLEAR_ERROR_REQUEST:
             return {
                 ...state,
-                errorMsg: null,
+                
             }
         case CLEAR_ERROR_SUCCESS:
             return {
                 ...state,
-                errorMsg: null,
+                errorMsg: "",
+                previousMatchMsg: "",
             }
         case CLEAR_ERROR_FAILURE:
             return {
                 ...state,
-                errorMsg: null,
+                errorMsg: "Clear Error fail",
+                previousMatchMsg: "Clear Error fail",
             }
         
         
