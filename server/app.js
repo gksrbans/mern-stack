@@ -21,6 +21,23 @@ const prod = process.env.NODE_ENV === "production";
 app.use(hpp());
 app.use(helmet({ contentSecurityPolicy: false, })); // 이거 정책 꺼야대는듯 ?
 
+if(prod) {
+  app.use(
+    cor({
+      origin: ["https://kyumoon.com", /\.kyumoon\.com$/],
+      credentials: true,
+    })
+  )
+} else {
+  app.use(morgan("dev"));
+  app.use(
+    cor({
+      origin: true,
+      credentials: true,
+    })
+  )
+}
+
 app.use(cors({ origin: true, credentials: true }));
 app.use(morgan("dev"));
 
@@ -37,6 +54,18 @@ mongoose
   .catch((e) => console.log(e));
 
 // Use routes
+
+app.all("*", (req, res, next) => {
+  let protocol = req.headers['x-forward-proto'] || req.protocol
+  //if(req.secure)
+  if(protocol === "https") {
+    next()
+  } else {
+    let to = `https://${req.hostname}${req.url}`
+    res.redirect(to);
+  }
+});
+
 //app.get("/");
 app.use("/api/post", postRoutes);
 app.use("/api/user", userRoutes);
