@@ -5,13 +5,13 @@ import { CATEGORY_FIND_FAILURE, CATEGORY_FIND_REQUEST, CATEGORY_FIND_SUCCESS, PO
 
 // All Posts load
 
-const loadPostAPI = () => {
-    return axios.get("/api/post")
+const loadPostAPI = (payload) => {
+    return axios.get(`/api/post/skip/${payload}`);
 }
 
-function* loadPosts() {
+function* loadPosts(action) {
     try {
-        const result = yield call(loadPostAPI)
+        const result = yield call(loadPostAPI, action.payload)
         console.log(result, "loadPosts")
         yield put({
             type: POSTS_LOADING_SUCCESS,
@@ -22,7 +22,7 @@ function* loadPosts() {
             type: POSTS_LOADING_FAILURE,
             payload: e,
         })
-        yield put(push("/"));
+        
     }
 }
 

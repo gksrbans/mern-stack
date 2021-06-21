@@ -52,15 +52,27 @@ router.post("/image", uploadS3.array("upload",5), async(req, res, next) => {
 
 
 
-// api/post
-router.get('/', async(req, res) => {
-    const postFindResult = await Post.find();
-    const categoryFindResult = await Category.find();
-    const result = {postFindResult, categoryFindResult}
+//  @route    GET api/post
+//  @desc     More Loading Posts
+//  @access   public
 
-    console.log(postFindResult, "post 다찾았당")
-    res.json(result)
-})
+router.get("/skip/:skip", async (req, res) => {
+  try {
+    const postCount = await Post.countDocuments();
+    const postFindResult = await Post.find()
+      .skip(Number(req.params.skip))
+      .limit(6)
+      .sort({ date: -1 });
+
+    const categoryFindResult = await Category.find();
+    const result = { postFindResult, categoryFindResult, postCount };
+
+    res.json(result);
+  } catch (e) {
+    console.log(e);
+    res.json({ msg: "더 이상 포스트가 없습니다" });
+  }
+});
 
 // @route   POST api/post
 // @desc    Create a Post
@@ -127,6 +139,8 @@ router.get("/:id", async(req, res, next) => {
         const post = await Post.findById(req.params.id)
       .populate("creator", "name")
       .populate({ path: "category", select: "categoryName" });
+      post.views += 1; // 포스트 뷰 증가
+      post.save(); // 저장
       res.json(post);
     } catch(e) {
         console.error(e)

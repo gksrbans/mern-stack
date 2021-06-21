@@ -15,12 +15,13 @@ const initialState = {
 };
 
 
+// eslint-disable-next-line
 export default function (state = initialState, action) {
     switch(action.type) {
         case POSTS_LOADING_REQUEST:
             return {
                 ...state,
-                posts: [], // 카드를 눌렀을때 빈배열로 초기화.
+                //posts: [], // 카드를 눌렀을때 빈배열로 초기화.
                 loading: true,
             } 
 
@@ -29,6 +30,7 @@ export default function (state = initialState, action) {
                 ...state,
                 posts: [...state.posts, ...action.payload.postFindResult],
                 categoryFindResult: action.payload.categoryFindResult,
+                postCount: action.payload.postCount,
                 loading: false,
             }
             

@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet";
 import {
   POST_DETAIL_LOADING_REQUEST,
   POST_DELETE_REQUEST,
-  USER_LOADING_REQUEST,
+  
 } from "../../redux/types";
 import { Button, Row, Col, Container } from "reactstrap";
 import { Link } from "react-router-dom";
