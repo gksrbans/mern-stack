@@ -23,7 +23,7 @@ app.use(helmet({ contentSecurityPolicy: false, })); // 이거 정책 꺼야대�
 
 if(prod) {
   app.use(
-    cor({
+    cors({
       origin: ["https://kyumoon.com", /\.kyumoon\.com$/],
       credentials: true,
     })
@@ -31,7 +31,7 @@ if(prod) {
 } else {
   app.use(morgan("dev"));
   app.use(
-    cor({
+    cors({
       origin: true,
       credentials: true,
     })
