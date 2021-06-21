@@ -9,7 +9,7 @@ const {PORT} = config
 greenlock.init({
     packageRoot: path.join(__dirname, "../"),
     configDir: path.join(__dirname, "../", "server/config/greenlock.d"),
-    maintainerEamil: "gksrbanssla@naver.com",
+    maintainerEmail: "gksrbanssla@naver.com",
     cluster: false
 }).serve(app,() => {
     console.log("green lock working")
