@@ -19,7 +19,7 @@ const { MONGO_URI } = config;
 const prod = process.env.NODE_ENV === "production";
 
 app.use(hpp());
-app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false, })); // 이거 정책 꺼야대는듯 ?
 
 app.use(cors({ origin: true, credentials: true }));
 app.use(morgan("dev"));
