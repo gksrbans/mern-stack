@@ -169,6 +169,7 @@ const EditPasswordAPI = (payload) => {
     if (token) {
       config.headers["x-auth-token"] = token;
     }
+
     return axios.post(`/api/user/${payload.userName}/profile`, payload, config);
   };
   
@@ -181,9 +182,10 @@ const EditPasswordAPI = (payload) => {
         payload: result.data,
       });
     } catch (e) {
+      console.log(e, "error Editpassword임");
       yield put({
         type: PASSWORD_EDIT_UPLOADING_FAILURE,
-        payload: e.response,
+        payload: e.response.data,
       });
     }
   }

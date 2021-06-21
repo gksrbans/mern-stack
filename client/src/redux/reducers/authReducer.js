@@ -33,8 +33,8 @@ const authReducer = (state = initialState, action) => {
                 isLoading: false,
                 userId: action.payload.user.id,
                 userRole: action.payload.user.role,
+                userName: action.payload.user.name,
                 errorMsg:""
-
             }
         case REGISTER_FAILURE:
         case LOGIN_FAILURE:
@@ -46,6 +46,7 @@ const authReducer = (state = initialState, action) => {
                 token: null,
                 user: null,
                 userId: null,
+                userName: null,
                 isAuthenticated: false,
                 isLoading: false,
                 userRole: null,
@@ -58,6 +59,7 @@ const authReducer = (state = initialState, action) => {
                 token: null,
                 user: null,
                 userId: null,
+                userName: null,
                 isAuthenticated: false,
                 isLoading: false,
                 userRole: null,
@@ -96,18 +98,20 @@ const authReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isLoading: false,
-                successMsg: action.payload.data.success_msg,
+                successMsg: action.payload.success_msg,
                 errorMsg: "",
                 previousMsg: "",
-            }
+            };
         case PASSWORD_EDIT_UPLOADING_FAILURE:
+            console.log(action.payload.fail_msg, "fail");
+            console.log(action.payload.match_msg, "match");
             return {
                 ...state,
                 isLoading: false,
                 successMsg: "",
                 errorMsg: action.payload.fail_msg,
                 previousMatchMsg: action.payload.match_msg,
-            }    
+            }; 
             
         case CLEAR_ERROR_REQUEST:
             return {

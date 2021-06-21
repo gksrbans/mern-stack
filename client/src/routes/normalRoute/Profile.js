@@ -20,9 +20,11 @@ import {
 } from "reactstrap";
 
 const Profile = () => {
+  console.log('Profile 진입')
   const { userId, errorMsg, successMsg, previousMatchMsg } = useSelector(
     (state) => state.auth
   );
+  console.log(userId, '유저아이디 확인')
   const { userName } = useParams();
   const [form, setValues] = useState({
     previousPassword: "",
